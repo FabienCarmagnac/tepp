@@ -1,5 +1,5 @@
-#ifndef TE_CSVFILE
-#define TE_CSVFILE
+#ifndef TEPP_CSVFILE_H_
+#define TEPP_CSVFILE_H_
 
 #include <string>
 #include <fstream>
@@ -35,4 +35,4 @@ template < class T > s_vT< T > read_csv(const std::string & filename, char sep, 
 
 }
 
-#endif // TE_CSVFILE
+#endif // TEPP_CSVFILE_H_

@@ -1,7 +1,5 @@
-#ifndef TE_DATETIME_H
-#define TE_DATETIME_H
-
-#include "tepp/import_export.h"
+#ifndef TEPP_DATETIME_H
+#define TEPP_DATETIME_H
 
 #include <chrono>
 #include <string>
@@ -10,15 +8,15 @@
 
 namespace tepp
 {
-    TE_API tp          TE_DECL strtotp(const std::string & str);
-    TE_API std::string TE_DECL tptostr(const tp & ddate);
-    TE_API tp          TE_DECL to_day(const tp & ddate);
-    TE_API tp          TE_DECL trunked_now();
-    TE_API bool        TE_DECL is_business_day(const tp & tpp);
-    TE_API tp          TE_DECL now();
-    TE_API std::string TE_DECL now_str();
+    tp          strtotp(const std::string & str);
+    std::string tptostr(const tp & ddate);
+    tp          to_day(const tp & ddate);
+    tp          trunked_now();
+    bool        is_business_day(const tp & tpp);
+    tp          now();
+    std::string now_str();
 }
 
-TE_API std::ostream & operator << (std::ostream & os, const tepp::tp &);
+std::ostream & operator << (std::ostream & os, const tepp::tp &);
 
-#endif // TE_DATETIME_H
+#endif // TEPP_DATETIME_H

@@ -1,7 +1,7 @@
 
 #include "stdstat.h"
 
-#include <limits>
+
 #include <cmath>
 
 namespace tepp

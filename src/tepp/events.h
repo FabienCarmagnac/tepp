@@ -1,19 +1,17 @@
-#ifndef TE_EVENTS_H
-#define TE_EVENTS_H
+#ifndef TEPP_EVENTS_H_
+#define TEPP_EVENTS_H_
 
 #include <functional>
 #include <list>
 #include <array>
 #include <algorithm>
 
-#include "tepp/import_export.h"
-
 #include "tepp/thread_pool.h"
 
 namespace tepp
 {
 
-    template <class source_t> class TE_API event_generator
+    template <class source_t> class event_generator
     {
         typedef typename std::function<int(source_t &)>  notify_function;
         typedef typename source_t::events events;

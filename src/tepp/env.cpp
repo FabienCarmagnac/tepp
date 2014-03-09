@@ -14,15 +14,20 @@
 
 namespace tepp
 {
-    std::string root()
+	const std::string & empty_string()
+	{
+		static std::string r;		
+		return r;
+	}
+    const std::string & root()
     {
 
         static std::string s ;
         if(s.empty())
         {
-            const char * v = getenv(TE_ENV_VAR);
+            const char * v = getenv(TEPP_ENV_VAR);
             if(!v)
-                throw std::runtime_error("Please set system variable " + std::string(TE_ENV_VAR) + " or change TE_ENV_VAR itself and recompile tepp.");
+                throw std::runtime_error("Please set system variable " + std::string(TEPP_ENV_VAR) + " or change TEPP_ENV_VAR itself and recompile tepp.");
             s=v;
         }
         return s;
@@ -31,7 +36,7 @@ namespace tepp
 
     std::string resolve_path(const std::string & s)
     {
-        std::string var = std::string("$") + TE_ENV_VAR;
+        std::string var = std::string("$") + TEPP_ENV_VAR;
         size_t pos = s.find(var);
         if(pos==std::string::npos) // not found
             return s;

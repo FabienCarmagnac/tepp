@@ -1,15 +1,14 @@
-#ifndef TE_STDSTAT_H
-#define TE_STDSTAT_H
+#ifndef TEPP_STDSTAT_H
+#define TEPP_STDSTAT_H
 
-#include "tepp/import_export.h"
-
+#include <limits>
 #include <string>
 #include <initializer_list>
 
 namespace tepp
 {
 
-    class TE_API stdstat
+    class stdstat
     {
         double m_min = std::numeric_limits<double>::max();
         double m_max = std::numeric_limits<double>::min();
@@ -39,4 +38,4 @@ namespace tepp
         void add(const std::initializer_list<double> &);
     };
 }
-#endif // TE_STDSTAT_H
+#endif // TEPP_STDSTAT_H

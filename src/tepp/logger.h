@@ -2,6 +2,7 @@
 #define TE_LOGGER_H
 
 #include <iostream>
+#include <log4cxx/logger.h>
 
 namespace tepp
 {

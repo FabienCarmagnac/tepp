@@ -1,8 +1,6 @@
 #ifndef TE_STRINGTOOLS
 #define TE_STRINGTOOLS
 
-#include "tepp/import_export.h"
-
 #include <string>
 #include <vector>
 #include <memory>
@@ -11,8 +9,8 @@
 
 namespace tepp
 {
-    TE_API s_vT< std::string > TE_DECL split(const std::string & s, char sep, bool remove_empty = false);
-    TE_API std::string         TE_DECL trim(const std::string & s);
+    s_vT< std::string > split(const std::string & s, char sep, bool remove_empty = false);
+    std::string         trim(const std::string & s);
 
 
     template < class T > std::ostream & operator << (std::ostream & os, const T & t)

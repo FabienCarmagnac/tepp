@@ -1,5 +1,5 @@
-#ifndef TE_BUFFER_H
-#define TE_BUFFER_H
+#ifndef TEPP_BUFFER_H_
+#define TEPP_BUFFER_H_
 
 #include "gentypes.h"
 
@@ -195,5 +195,5 @@ private:
 };
 }
 
-#endif // TE_BUFFER_H
+#endif // TEPP_BUFFER_H_
 

@@ -1,5 +1,5 @@
-#ifndef TE_BOOK_ENTRY_H
-#define TE_BOOK_ENTRY_H
+#ifndef TEPP_BOOK_ENTRY_H
+#define TEPP_BOOK_ENTRY_H
 
 #include "tepp/gentypes.h"
 
@@ -17,5 +17,5 @@ namespace tepp
 
 }
 
-#endif // TE_BOOK_ENTRY_H
+#endif // TEPP_BOOK_ENTRY_H
 

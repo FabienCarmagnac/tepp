@@ -1,5 +1,5 @@
-#ifndef TE_BOOK_H
-#define TE_BOOK_H
+#ifndef TEPP_BOOK_H
+#define TEPP_BOOK_H
 
 #include <string>
 #include <iostream>
@@ -61,6 +61,6 @@ namespace tepp
 
 
 
-#endif // TE_BOOK_H
+#endif // TEPP_BOOK_H
 
 

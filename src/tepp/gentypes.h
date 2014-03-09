@@ -1,5 +1,5 @@
-#ifndef TE_GENTYPES_H
-#define TE_GENTYPES_H
+#ifndef TEPP_GENTYPES_H_
+#define TEPP_GENTYPES_H_
 
 #include <vector>
 #include <string>
@@ -33,4 +33,4 @@ namespace tepp
 
 }
 
-#endif // TE_GENTYPES_H
+#endif // TEPP_GENTYPES_H_

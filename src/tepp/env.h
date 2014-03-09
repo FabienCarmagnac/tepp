@@ -1,23 +1,25 @@
-#ifndef TE_ENV
-#define TE_ENV
+#ifndef TEPP_ENV
+#define TEPP_ENV
 
-#include "tepp/import_export.h"
 #include <string>
-
+#include <cstdlib>
 
 namespace tepp
 {
     // change this if you want to change the way to get the root path of te env
-#define TE_ENV_VAR "TE_HOME"
+#define TEPP_ENV_VAR "TEPP_HOME"
 
+	/// Empty string to be used to avoid copying empty strings
+	const std::string & empty_string();
+	
     /// Throw error if not found
-    TE_API std::string TE_DECL root();
+    const std::string & root();
 
     /// Resolve a path containing a TE_ENV_VAR flag
-    TE_API std::string TE_DECL resolve_path(const std::string & s);
+    std::string resolve_path(const std::string & s);
 
-    TE_API size_t TE_DECL get_nb_cores();
+    size_t get_nb_cores();
 
 }
 
-#endif // TE_ENV
+#endif // TEPP_ENV
