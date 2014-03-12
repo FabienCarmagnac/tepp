@@ -31,7 +31,6 @@ namespace tepp
             s=v;
         }
         return s;
-
     }
 
     std::string resolve_path(const std::string & s)

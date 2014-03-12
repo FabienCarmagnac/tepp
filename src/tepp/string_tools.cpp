@@ -6,43 +6,39 @@
 namespace tepp
 {
 
-    s_vT< std::string > split(const std::string & s, char sep, bool remove_empty)
+    void split(const str & s, char sep, vec_str & ret, bool remove_empty)
     {
-        s_vT< std::string > ret = s_vT< std::string > (new std::vector< std::string > () );
         size_t begin=0, end=0;
-
         while(end<s.size())
         {
             if(s[end]==sep)
             {
-                std::string t = s.substr(begin, end-begin);
+                str t = s.substr(begin, end-begin);
                 t = trim(t);
                 if( ! remove_empty || ! t.empty())
-                    ret->push_back(t);
+                    ret.push_back(t);
                 begin=end+1;
             }
             end++;
         }
 
-        std::string t = s.substr(begin, end-begin);
+        str t = s.substr(begin, end-begin);
         t = trim(t);
         if( ! remove_empty || ! t.empty())
-            ret->push_back(t);
+            ret.push_back(t);
 
-
-        return ret;
     }
 
-    std::string trim(const std::string & s)
+    str trim(const str & s)
     {
-        static std::string separators(" \n\t");
+        static str separators(" \n\t");
         size_t end, begin;
         for(begin=0;begin < s.size();++begin)
-            if(separators.find(s[begin])==std::string::npos) // trouvé, on arrête
+            if(separators.find(s[begin])==std::string::npos) // trouvÃ©, on arrÃªte
                 break;
 
         for(end=s.size();end>0;--end)
-            if(separators.find(s[end-1])==std::string::npos) // trouvé, on arrête
+            if(separators.find(s[end-1])==std::string::npos) // trouvÃ©, on arrÃªte
                 break;
 
         if(begin!=0 || end!=s.size())

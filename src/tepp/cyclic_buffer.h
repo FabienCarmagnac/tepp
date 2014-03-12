@@ -9,191 +9,152 @@
 
 namespace tepp
 {
+/**
+ * This class implements a cyclic buffer.
+ * The size starts at 0 but the capacity (ie, max size)
+ * is set at construction and cannot be changed.
+ *
+ * The iterator is a begin()-relative iterator.
+ * The offset of the iterator is relative to the begin 
+ * of the cyclic_buffer
+ *
+ */
 
-
-template < class data > class cyclic_buffer
+template < class T > class cyclic_buffer
 {
-public:
+	T * m_base;
+	T * m_end;
 
-    /* iterator relative to the begining of the buffer ie if offset == 0, the iterator will always be on the first element.
-    iterator is valid from [0 .. size [ indexes */
-    class iterator
-    {
-        size_t m_offset; // position
-		cyclic_buffer<data> * m_buffer;
-    public:
-		iterator(cyclic_buffer<data> * mq, size_t offset = 0) : m_buffer(mq)
-        {
-            m_offset = offset;
-        }
-
-        iterator & operator ++ ()
-        {
-            ++m_offset;
-#ifdef _DEBUG
-            if(m_offset>m_buffer->size())
-                throw std::range_error("iterator : ++ , out of bounds!");
-#endif
-            return *this;
-        }
-        iterator & operator -- ()
-        {
-#ifdef _DEBUG
-            if(m_offset==0)
-                throw std::range_error("iterator : -- , out of bounds!");
-#endif
-            --m_offset;
-            return *this;
-        }
-        iterator operator + (int i)const
-        {
-
-            int target=int(m_offset)+i;
-#ifdef _DEBUG
-			if(target < 0 || target >m_buffer->size())
-                throw std::range_error("iterator : + int , out of bounds!");
-#endif
-
-            return iterator(m_buffer, size_t(target));
-        }
-        iterator operator - (int i)const
-        {
-			int target=int(m_offset)-i;
-#ifdef _DEBUG            
-            if(target < 0 || target >m_buffer->size())
-                throw std::range_error("iterator : - int , out of bounds!");
-#endif
-
-            return iterator(m_buffer, size_t(target));
-        }
-        int operator - (const iterator & i) const
-        {
-            return int(m_offset) - int(i.m_offset);
-        }
-        const data & operator * () const
-        {
-            return m_buffer->at(m_offset);
-        }
-        data & operator * ()
-        {
-            return m_buffer->at(m_offset);
-        }
-        data * operator -> ()
-        {
-            return &(m_buffer->at(0));
-        }
-        const data * operator -> ()const
-        {
-            return &(m_buffer->at(0));
-        }
-        bool operator < (const iterator & mqi) const
-        {
-            return m_offset < mqi.m_offset;
-        }
-        bool operator > (const iterator & mqi) const
-        {
-            return m_offset > mqi.m_offset;
-        }
-        bool operator <= (const iterator & mqi) const
-        {
-            return m_offset <= mqi.m_offset;
-        }
-        bool operator >= (const iterator & mqi) const
-        {
-            return m_offset >= mqi.m_offset;
-        }
-        bool operator == (const iterator & mqi) const
-        {
-            return m_offset == mqi.m_offset;
-        }
-
-        bool operator != (const iterator & mqi) const
-        {
-            return m_offset != mqi.m_offset;
-        }
-    };
+	size_t m_capacity;
+	size_t m_size;
 
 public:
-    // size is size of l
-    explicit cyclic_buffer(size_t size, const data2 & init_value)
-    {
-#ifdef _DEBUG
-		if(size==0) 
-			throw std::runtime_error("cyclic_buffer ctor : size cant be 0 !");
-#endif
-        m_size=size;
-        m_begin=new data[size];           
-        m_end=m_begin+size;
-        m_cur = m_end;
-        for (data * c = m_begin; c != m_end; *c++ = init_value);
-    }
+
+	class iterator
+	{
+		const cyclic_buffer<T> & m_cb;
+		size_t m_offset;
+	public:
+		iterator(const cyclic_buffer & cb, size_t offset=0)
+			:m_cb(cb), m_offset(offset)
+		{
+		}
+		~iterator() {}
+
+		size_t get_offset()const
+		{
+			return m_offset;
+		}
+
+		const T & operator *()const
+		{
+			return m_cb.at(m_offset);
+		}
+		const T & at(int i)const
+		{
+			int final_offset=int(m_offset)+i;
+			assert( (final_offset>=0 && final_offset<m_cb.size()) && "offset is on last element, cant apply relative offset !");
+			return m_cb.at(final_offset);
+		}
+		const T & operator [](int i)const
+		{
+			return at(i);
+		}
+
+		iterator & operator ++ ()
+		{
+			assert(m_offset<m_cb.size() && "offset is on last element, cant ++ !");
+			++m_offset;
+			return *this;
+		}
+		iterator & operator -- ()
+		{
+			assert(m_offset>0 && "offset is zero, cant -- !");
+			--m_offset;
+			return *this;
+		}
+		bool operator != (const iterator & it)const
+		{
+			assert( (&(it.m_cb) == &m_cb) && "op != : comparing iterator on differents cyclic_buf");
+			return it.m_offset != m_offset;
+		}
+		bool operator == (const iterator & it)const
+		{
+			assert( (it.m_cb == m_cb) && "op == : comparing iterator on differents cyclic_buf");
+			return it.m_offset == m_offset;
+		}
+		bool operator < (const iterator & it)const
+		{
+			asset( (&it.m_cb == &m_cb) && "op < : comparing iterator on differents cyclic_buf");
+			return m_offset<it.m_offset;
+		}
+		bool operator <= (const iterator & it)const
+		{
+			assert( (&it.m_cb == &m_cb) && "op <= : comparing iterator on differents cyclic_buf");
+			return m_offset<=it.m_offset;
+		}
+	};
+
+	cyclic_buffer(size_t capacity)
+	{
+		assert(capacity && "cyclic_buffer cant have capacity of 0");
+		m_end=m_base=new T[m_capacity=capacity];
+		m_size=0;
+	}
+
 	virtual ~cyclic_buffer()
-    {
-        delete [] m_begin;
-    }
+	{
+		delete [] m_base;
+	}
 
-	cyclic_buffer & operator(const data & d)
-    {
-		(*m_cur) = d;
-		if (m_cur + 1 == m_end)
-			m_cur = m_begin;
+	size_t size()const
+	{
+		return m_size;
+	}
+	size_t capacity()const
+	{
+		return m_capacity;
+	}
+
+	const T & operator [](int offset)const
+	{
+		return at(offset);
+	}
+	const T & at(size_t offset)const
+	{
+		assert( (offset<m_size) && "bad index for cyclic_buffer");
+
+		const T * c = m_end-1-offset;
+		if(c < m_base)
+			return *(c + m_capacity);
 		else
-			m_cur++;
-        return *this;
-    }
+			return *c;
+	}
 
-    iterator begin()
-    {
-        return iterator(this,0);
-    }
-    iterator end()
-    {
-        return iterator(this, m_size);
-    }
+	void add(const T & t)
+	{
+		(*m_end++) = t;
 
-    const data & at(size_t idx)const
-    {
-#ifdef _DEBUG
-         if(idx >= size() )
-            throw std::range_error("iterator : at const, out of bounds!");
-#endif
-		 data * e = m_cur - (idx + 1);
-		 return *(e >= m_begin ? e : e + m_size);
-    }
-    data & at(size_t idx)
-    {
-#ifdef _DEBUG
-         if(idx >= size() )
-            throw std::range_error("iterator : at const, out of bounds!");
-#endif
-		 data * e = m_cur - (idx + 1);
-		 return *(e >= m_begin ? e : e + m_size);
-}
+		if(m_end == m_base+m_capacity)
+		{
+			m_end=m_base;
+		}
 
-    const data & operator [] (size_t idx)const
-    {
-        return at(idx); // check done inside at
-    }
-    data & operator [] (size_t idx)
-    {
-        return at(idx); // check done inside at
-    }
-    size_t size()const
-    {
-        return m_size;
-    }
+		if(m_size<m_capacity)
+			m_size++;
+	}
 
-    const data & operator()()const
-    {
-        return *m_cur;
-    }
-private:
+	iterator begin()
+	{
+		return iterator(*this, 0);
+	}
+	iterator end()
+	{
+		return iterator(*this, m_size);
+	}
 
-    data * m_begin, *m_end, *m_cur;
-    size_t m_size;
 
 };
 }
 
 #endif // TEPP_BUFFER_H_
-

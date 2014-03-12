@@ -5,32 +5,37 @@
 #include <fstream>
 #include <functional>
 
-#include "gentypes.h"
+#include "tepp/string_tools.h"
+#include "tepp/gentypes.h"
 
 namespace tepp
 {
-template < class T > s_vT< T > read_csv(const std::string & filename, char sep, std::function< T(const vs&, bool& ) > f)
+	/* Reads a csv file, split each line with the sep char and inserts
+	 * at the end of the container the result of the fonction f if the boolean 2nd param is true.
+	 * Function is type of std::function< T(const vec_str&, bool& ) >
+	 * **/
+template < class Function, class Container > bool read_csv(const str & filename, char sep, Function f, Container & container)
 {
-    s_vT<T> ret (new std::vector<T>() );
     std::ifstream ifs(filename.c_str());
+	vec_str tab;
+    if( ! ifs)
+		return false;
+		
+	std::string line;
+	while(getline(ifs, line))
+	{
+		line=trim(line);
+		if(line.size() && line[0] == '#')
+			continue;
+		split(line, sep, tab, false);
 
-    if(ifs)
-    {
-        std::string line;
-        while(getline(ifs, line))
-        {
-            line=trim(line);
-            if(line.size() && line[0] == '#')
-                continue;
-            s_vs tab = split(line, sep, false);
-
-            bool valid(false);
-            T t = f(*tab.get(), valid);
-            if(valid)
-                ret->push_back(t);
-        }
-    }
-    return ret;
+		bool valid(false);
+		auto t = f(tab, valid);
+		if(valid)
+			container.insert(container.end(), t);
+		tab.clear();
+	}
+	return true;
 }
 
 }

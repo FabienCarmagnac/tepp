@@ -11,22 +11,23 @@ CHECK_EQUAL(tepp::trim(" abc\n"), "abc");
 CHECK(tepp::trim("").empty());
 
 
-std::shared_ptr < std::vector< std::string > > v;
-v = tepp::split("a ; b;  ;c ", ';', true);
-CHECK_EQUAL(v->at(0), "a");
-CHECK_EQUAL(v->at(1), "b");
-CHECK_EQUAL(v->at(2), "c");
-CHECK_EQUAL(v->size(), 3);
-
+tepp::vec_str v;
+tepp::split("a ; b;  ;c ", ';', v, true);
+CHECK_EQUAL(v.at(0), "a");
+CHECK_EQUAL(v.at(1), "b");
+CHECK_EQUAL(v.at(2), "c");
+CHECK_EQUAL(v.size(), 3);
+v.clear();
 // split 
 
-v = tepp::split("; ", ';', false);
-CHECK(v->at(0).empty());
-CHECK(v->at(1).empty());
-CHECK_EQUAL(v->size(), 2);
+tepp::split("; ", ';', v, false);
+CHECK(v.at(0).empty());
+CHECK(v.at(1).empty());
+CHECK_EQUAL(v.size(), 2);
+v.clear();
 
-v = tepp::split("", ';', false);
-CHECK(v->at(0).empty());
-CHECK_EQUAL(v->size(), 1);
+tepp::split("", ';', v, false);
+CHECK(v.at(0).empty());
+CHECK_EQUAL(v.size(), 1);
 	
 }

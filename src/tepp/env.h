@@ -20,6 +20,14 @@ namespace tepp
 
     size_t get_nb_cores();
 
+	constexpr char path_separator=
+#ifdef _WINDOWS
+	'\\'
+#else
+	'/'
+#endif
+;
+
 }
 
 #endif // TEPP_ENV

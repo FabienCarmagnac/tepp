@@ -1,5 +1,5 @@
-#ifndef TE_STRINGTOOLS
-#define TE_STRINGTOOLS
+#ifndef TEPP_STRINGTOOLS_H
+#define TEPP_STRINGTOOLS_H
 
 #include <string>
 #include <vector>
@@ -9,8 +9,8 @@
 
 namespace tepp
 {
-    s_vT< std::string > split(const std::string & s, char sep, bool remove_empty = false);
-    std::string         trim(const std::string & s);
+    void split(const str & s, char sep, vec_str & ret, bool remove_empty = false);
+    std::string         trim(const str & s);
 
 
     template < class T > std::ostream & operator << (std::ostream & os, const T & t)
@@ -20,4 +20,4 @@ namespace tepp
 
 }
 
-#endif // TE_STRINGTOOLS
+#endif // TEPP_STRINGTOOLS_H
