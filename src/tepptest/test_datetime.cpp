@@ -1,21 +1,23 @@
-#include <UnitTest++/UnitTest++.h>
-
+#include "tepptest/helpers.h"
 #include "tepp/datetime.h"
+#include <sstream>
 
-TEST(datetime)
+void test_datetime()
 {
 
-	int max_iter = 1000;
+    std::string ddate = "20010101_130152";
+    CHECK_TRUE(tepp::strtotp(ddate) < std::chrono::system_clock::now());
+    tepp::tp t = tepp::trunked_now();
+    CHECK_EQUAL(tepp::strtotp(tepp::tptostr(t)), t);
 
-	std::string ddate = "20121212_130152";
-	int j = 0, i = max_iter;
-	while (++j < i) 
-	{
-		CHECK(tepp::strtotp(ddate) < std::chrono::system_clock::now());
+    for(int i=1;i<=12;i++)
+    {
+        std::ostringstream ddate;
+        ddate << "2012";
+        if (i < 10) ddate << "0";
+        ddate << i << "01_130152";
 
-		CHECK_EQUAL(tepp::tptostr(tepp::strtotp(ddate)), ddate);
-		tepp::tp t = tepp::trunked_now();
-		CHECK_EQUAL(tepp::strtotp(tepp::tptostr(t)), t);
+        CHECK_EQUAL(tepp::tptostr(tepp::strtotp(ddate.str())), ddate.str());
 
-	}
+    }
 }

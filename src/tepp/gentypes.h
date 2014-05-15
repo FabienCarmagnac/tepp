@@ -28,6 +28,8 @@ namespace tepp
 
     template < class T, class U > using transformer = std::function< U(const T &) > ;
 
+    typedef std::function<void()> action0;
+
 
 }
 

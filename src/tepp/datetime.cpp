@@ -7,13 +7,13 @@ namespace tepp
 
 	void te_gmtime(std::time_t * t, tm * out_tm)
 	{
-		static const int n_123456 = 1;
-		static std::atomic<int> cnt = ATOMIC_VAR_INIT(n_123456);
+		static const int N = 1;
+		static std::atomic<int> cnt = ATOMIC_VAR_INIT(N);
 		while (std::atomic_fetch_sub(&cnt, 1) <= 0)
 			std::atomic_fetch_add(&cnt, 1);
 
 		tm* ret0 = std::localtime(t);
-		if (!ret0)
+        if (!ret0)
 		{
 			std::atomic_fetch_add(&cnt, 1);
 			throw std::range_error("bad time_t for get_time");
@@ -30,6 +30,7 @@ namespace tepp
         std::sscanf(str.c_str(),"%4d%2d%2d_%2d%2d%2d",&tm1.tm_year,&tm1.tm_mon,&tm1.tm_mday,&tm1.tm_hour,&tm1.tm_min,&tm1.tm_sec);
         tm1.tm_year -= 1900;
         tm1.tm_mon-- ;
+        tm1.tm_isdst = -1;
         return std::chrono::system_clock::from_time_t(mktime(&tm1));
     }
 

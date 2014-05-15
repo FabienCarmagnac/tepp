@@ -1,4 +1,4 @@
-#include <UnitTest++/UnitTest++.h>
+#include "tepptest/helpers.h"
 
 #include <iostream>
 
@@ -6,7 +6,14 @@
 int main(int argc, char **argv)
 {
 	std::cout<<"===BEGIN==="<< std::endl;
-	int ret=UnitTest::RunAllTests();
+    test_cyclic_buffer();
+    test_datetime();
+    test_env();
+    test_read_csv();
+    test_stdstat();
+    test_string_tools();
+    test_scheduler_replay();
+
 	std::cout<<"===END==="<< std::endl;
-	return ret;
+    getchar();
 }

@@ -53,7 +53,7 @@ public:
 		const T & at(int i)const
 		{
 			int final_offset=int(m_offset)+i;
-			assert( (final_offset>=0 && final_offset<m_cb.size()) && "offset is on last element, cant apply relative offset !");
+			assert( (final_offset>=0 && final_offset<int(m_cb.size())) && "offset is on last element, cant apply relative offset !");
 			return m_cb.at(final_offset);
 		}
 		const T & operator [](int i)const

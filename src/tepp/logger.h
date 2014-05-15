@@ -1,8 +1,7 @@
-#ifndef TE_LOGGER_H
-#define TE_LOGGER_H
+#ifndef TEPP_LOGGER_H
+#define TEPP_LOGGER_H
 
 #include <iostream>
-#include <log4cxx/logger.h>
 
 namespace tepp
 {
@@ -16,4 +15,4 @@ namespace tepp
 
 }
 
-#endif // TE_LOGGER_H
+#endif // TEPP_LOGGER_H
