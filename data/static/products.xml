@@ -1,0 +1,11 @@
+
+<tepp>
+    <products>
+    
+        <product symbol="6E" currency="USD" exchange="NYMEX" tick_size="0.0001" tick_value="12.5"  	/> 
+        <product symbol="CL" currency="USD" exchange="NYMEX" tick_size="0.01" 	tick_value="10" 	/> 
+        <product symbol="FGBL" currency="EUR" exchange="EUREX" tick_size="0.01" tick_value="12.5" 	/> 
+        
+    </products>
+    
+</tepp>

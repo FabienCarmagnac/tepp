@@ -29,6 +29,15 @@ namespace tepp
     template < class T, class U > using transformer = std::function< U(const T &) > ;
 
     typedef std::function<void()> action0;
+    typedef double price;
+    const double null_price = std::numeric_limits<double>::quiet_NaN();
+    bool is_null_price(price p)
+    {
+        return std::isnan(p);
+    }
+    typedef uint32_t qty;
+    const qty infinite_qty = std::numeric_limits<uint32_t>::infinity();
+    
 
 
 }

@@ -1,5 +1,5 @@
-#ifndef TE_INSTRUMENT
-#define TE_INSTRUMENT
+#ifndef TEPP_INSTRUMENT_H
+#define TEPP_INSTRUMENT_H
 
 #include "te_import_export.h"
 #include "market_data.h"
@@ -8,14 +8,13 @@
 #include <chrono>
 #include <string>
 
-class TiXmlElement;
-
-namespace te
+namespace tepp
 {
-    class product;
 
-    class TE_DLL_EXPORT instrument
+    class instrument
     {
+    };
+/*
         std::string m_full_symbol, m_filename;
         const product & m_product;
         tp m_roll_date;
@@ -52,9 +51,9 @@ namespace te
         static comparer<instrument*> compare_by_expi_date();
         static comparer<instrument*> compare_by_roll_date();
 
-    };
+    };*/
 
 
 }
 
-#endif // TE_INSTRUMENT
+#endif // TEPP_INSTRUMENT_H
