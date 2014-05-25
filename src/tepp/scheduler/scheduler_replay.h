@@ -10,7 +10,12 @@
 namespace tepp
 {
 
-    /* This scheduler is mono-thread, since time is emulated. */
+
+    /* This scheduler is mono-thread, since time is emulated.
+    
+    'notify' need to be called to simulate time 
+    
+    */
 
     class scheduler_replay
     {

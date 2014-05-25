@@ -13,6 +13,8 @@ int main(int argc, char **argv)
     test_stdstat();
     test_string_tools();
     test_scheduler_replay();
+    test_exchange();
+    test_event_timed_queue();
 
 	std::cout<<"===END==="<< std::endl;
     getchar();

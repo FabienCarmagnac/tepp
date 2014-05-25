@@ -20,7 +20,8 @@ void test_read_csv();
 void test_stdstat();
 void test_string_tools();
 void test_scheduler_replay();
-
+void test_exchange();
+void test_event_timed_queue();
 
 #endif // TEPPTEST_HELPERS_H
 

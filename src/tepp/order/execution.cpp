@@ -2,19 +2,29 @@
 
 namespace tepp
 {
-    price single_execution::get_nominal()const{ return exec_price * exec_qty; }
+    price execution_single::get_nominal() const { return exec_qty * exec_price; }   
 
-    const single_execution & executions::aggregated_execution()const{ return m_aggreg_exec; }
-    const executions::container & executions::get_execs()const{ return m_execs; }
+    void execution_aggregated::add_execution(const execution_single & exec)
+    {
+        qty new_qty = exec_qty + exec.exec_qty;
+        exec_price = (get_nominal() + exec.get_nominal()) / new_qty;
+        exec_qty = new_qty;
+        exec_time = exec.exec_time;
+    }
+    
 
-    void executions::add_execution(single_execution && exec)
+
+
+
+
+    const execution_memory::container & execution_memory::get_execs()const
+    {
+        return m_execs; 
+    }
+    void execution_memory::add_execution(const execution_single & exec)
     {
         m_execs.emplace_back(exec);
-        m_aggreg_exec.exec_price = (m_aggreg_exec.get_nominal() + exec.get_nominal()) / (exec_qty + exec.exec_qty);
-        m_aggreg_exec.exec_qty = (m_aggreg_exec.exec_qty + exec.exec_qty);
-        m_aggreg_exec.exec_time = exec.exec_time;
+        execution_aggregated::add_execution(exec);
     }
-
-
 }
 

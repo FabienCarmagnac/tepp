@@ -2,68 +2,58 @@
 #define TEPP_ORDER_H
 
 #include <cstdint>
-#include "tepp/gentypes.h"
 #include "tepp/order/execution.h"
-#include "tepp/instrument.h"
+#include "tepp/gentypes.h"
 
 namespace tepp
 {
-    enum order_side : char { buyer=0, seller=1, enum_count=2 };
-    enum order_status : char { created = 0, working = 1, part_executed = 2, executed = 4, canceled = 8, , rejected = 16, deleted = 32 };
-    enum order_kind : char { market=0, limit =1, stop=2, stop_limit=3, enum_count=4 }; // stop_limit == stop | limit
+    class instrument;
+    class execution_aggregated;
+    class order;
 
-    template < class order_owner_t > class class order
+    enum order_side : char { buyer=0, seller=1 };
+    enum order_status : char { created = 0, working = 1, part_executed = 2, executed = 4, canceled = 8, rejected = 16, deleted = 32 };
+    enum order_kind : char { market=0, limit =1, stop=2, stop_limit=3 }; // stop_limit == stop | limit
+
+    class order_owner
+    {
+    public:
+        void on_event(order_status status, order & porder)
+        {}
+    };
+
+    class order
     {
 
     public:
 
-        order(qty p_qty, order_kind p_kind, order_side p_side, tp p_creation_time, const instrument & p_instrument, order_owner_t  & p_owner);
+        order(qty p_qty, order_kind p_kind, order_side p_side, tp p_creation_time, const instrument & p_instrument);
 
-        bool terminated()const { return 0 != (m_kind & (executed | canceled | rejected | deleted)); }
-        qty get_qty() const{ return m_qty; }
-        status get_status()const{ return m_status; }
-        kind get_kind()const{ return m_kind; }
-        bool has_stop()const{}
-        const instrument & get_instrument()const{ return m_instrument; }
-        const owner_t & get_owner()const{ return m_owner; }
-        const executions & get_executions(){ return m_execs; }
-        price get_stop()const{ return m_stop_price; }
-        price get_limit()const{ return m_limit_price; }
-        tp get_creation_time()const{ return m_creation_time; }
+        bool terminated()const;
+        qty get_qty() const;
+        order_status get_status()const;
+        order_kind get_kind()const;
+        bool has_stop()const;
+        const instrument & get_instrument()const;
+        const execution_aggregated & get_executions()const;
+        void on_event(order_status new_order_status);
+        price get_stop()const;
+        price get_limit()const;
+        tp get_creation_time()const;
 
-        qty qty_left()const
-        {
-            int32_t r = int32_t(get_executions().aggregated_execution().exec_qty) - m_qty;
-            if (r < 0)
-                return 0;
-            else
-                return r;
-        }
-
-        qty qty_overexec()const
-        {
-            int32_t r = int32_t(get_executions().aggregated_execution().exec_qty) - m_qty;
-            if (r < 0)
-                return -r;
-            else
-                return 0;
-        }
-
-
+        qty qty_left()const;
+        qty qty_overexec()const;
 
     protected:
         tp m_creation_time;
-        order_tatus m_status = created;
+        order_status m_status = created;
         qty m_qty=0;
         order_side m_side;
         price m_limit_price = null_price;
-        price m_stop_price;
-        side m_side;
-        kind m_kind;
-        const instrument_t & m_intrument;
-        order_owner_t & m_owner;
-        executions m_execs;
+        price m_stop_price = null_price;
+        order_kind m_kind=order_kind::limit;
         const instrument & m_instrument;
+        execution_aggregated  m_execs;
 
     };
 }

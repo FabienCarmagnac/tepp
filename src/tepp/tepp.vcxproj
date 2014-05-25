@@ -71,8 +71,10 @@
     <ClCompile Include="datetime.cpp" />
     <ClCompile Include="env.cpp" />
     <ClCompile Include="logger.cpp" />
+    <ClCompile Include="market\exchange.cpp" />
+    <ClCompile Include="market\virtual_market.cpp" />
     <ClCompile Include="order\execution.cpp" />
-    <ClCompile Include="order\virtual_market.cpp" />
+    <ClCompile Include="order\order.cpp" />
     <ClCompile Include="pugixml\pugixml.cpp" />
     <ClCompile Include="scheduler\scheduler_realtime.cpp" />
     <ClCompile Include="scheduler\scheduler_replay.cpp" />
@@ -91,11 +93,13 @@
     <ClInclude Include="gentypes.h" />
     <ClInclude Include="instrument.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="market\exchange.h" />
+    <ClInclude Include="market\virtual_market.h" />
     <ClInclude Include="order\execution.h" />
-    <ClInclude Include="order\virtual_market.h" />
     <ClInclude Include="order\order.h" />
     <ClInclude Include="pugixml\pugiconfig.hpp" />
     <ClInclude Include="pugixml\pugixml.hpp" />
+    <ClInclude Include="scheduler\event_timed_queue.h" />
     <ClInclude Include="scheduler\scheduled_task.h" />
     <ClInclude Include="scheduler\scheduler_realtime.h" />
     <ClInclude Include="scheduler\scheduler_replay.h" />
