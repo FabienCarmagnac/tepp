@@ -1,13 +1,6 @@
 #ifndef TEPP_INSTRUMENT_H
 #define TEPP_INSTRUMENT_H
 
-#include "te_import_export.h"
-#include "market_data.h"
-
-#include "gentypes.h"
-#include <chrono>
-#include <string>
-
 namespace tepp
 {
 

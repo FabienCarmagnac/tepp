@@ -7,6 +7,7 @@
 #include <list>
 #include <memory>
 #include <chrono>
+#include <cmath>
 #include <functional>
 #include <assert.h>
 
