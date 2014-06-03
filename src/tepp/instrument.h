@@ -1,11 +1,14 @@
 #ifndef TEPP_INSTRUMENT_H
 #define TEPP_INSTRUMENT_H
 
+
 namespace tepp
 {
 
     class instrument
     {
+    public:
+
     };
 /*
         std::string m_full_symbol, m_filename;

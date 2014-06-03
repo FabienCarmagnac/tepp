@@ -12,6 +12,8 @@
 
 #include <stdexcept>
 
+#pragma warning( disable : 4996 ) 
+
 namespace tepp
 {
 	const std::string & empty_string()

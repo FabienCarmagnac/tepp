@@ -12,13 +12,13 @@
 namespace tepp
 {
    
-    class book
+    class data_level1
     {
         book_entry bid, ask, last;
     public:
         
-        book(const book_entry & bid, const book_entry & ask, const book_entry & last);
-        book(const book_entry & bid, const book_entry & ask);
+        data_level1(const book_entry & bid, const book_entry & ask, const book_entry & last);
+        data_level1(const book_entry & bid, const book_entry & ask);
         bool has_last()const{ return last.ts >= bid.ts && last.ts >= ask.ts; }
         const book_entry & get_ask() const{ return ask; }
         const book_entry & get_bid() const{ return bid; }
