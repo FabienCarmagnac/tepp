@@ -6,6 +6,7 @@
 
 #include "tepp/order/order.h"
 #include "tepp/market/exchange.h"
+#include "tepp/scheduler/event_timed_queue.h"
 
 namespace tepp
 {
@@ -32,12 +33,50 @@ namespace tepp
 
     */
 
+    template < class market_data_t >
+    class virtual_exchange
+    {
+    public:
+        typedef virtual_exchange<market_data_t> type_t;
+        typedef event_timed_queue< type_t, market_data_t > event_queue_t;
+        typedef typename market_data_t data_t;
+    private:
+        const exchange & m_exchange;
+        event_queue_t m_event_seq;
+        std::forward_list< exchange_order<type_t> > m_exchange_orders;
+
+    public:
+        virtual_exchange(const exchange & p_exchange)
+            : m_exchange(p_exchange)
+        {}
+
+        void on_event(const market_data_t & md)
+        {
+            m_event_seq.on_event(md);
+        }
+
+
+        tp get_time()
+        {
+            return m_event_seq.get_time();
+        }
+
+        void emplace(on_event_t p_task, tp p_rendezvous, object_t * instance)
+        {
+            m_event_seq.emplace(p_task, p_rendezvous, instance);
+        }
+
+    };
+    template < class market_data_t > class order_exchange
+    {
+    public:
+    };
 
    
 
 #if 0
 
-    template < class market_data > class order_exchange
+    template < class market_data_t > class order_exchange
     {
         const exchange & m_exchange;
         order & m_order;
@@ -53,14 +92,14 @@ namespace tepp
         }
 
 
-        void on_event(const & market_data md)
+        void on_event(const & market_data_t md)
         {
             m_event_seq.on_event(md);
         }
 
     protected:
 
-        void on_time_to_new_market(const & market_data md)
+        void on_time_to_new_market(const & market_data_t md)
         {
             // time for answer to reach destination
             m_order.get_owner()->on_event(m_order, order_t::status::working);
@@ -68,19 +107,19 @@ namespace tepp
         }
 
         /* buy / sell */
-        void on_time_to_full_exec_buy(const & market_data md, callback_t & next);
+        void on_time_to_full_exec_buy(const & market_data_t md, callback_t & next);
         {
             fill_execs< order_side::buyer >(m_pending_exec);
             on_time_to_full_exec(md, next = on_time_to_full_exec_buy);
         }
-        void on_time_to_full_exec_sell(const & market_data md, callback_t & next);
+        void on_time_to_full_exec_sell(const & market_data_t md, callback_t & next);
         {
             fill_execs< order_side::seller >(m_pending_exec);
             on_time_to_full_exec(md, next = on_time_to_full_exec_sell);
         }
 
         /* neutral exec */
-        void on_time_to_full_exec_init(const & market_data md, callback_t & next);
+        void on_time_to_full_exec_init(const & market_data_t md, callback_t & next);
         {
             if (m_pending_exec.empty())
             {
@@ -94,7 +133,7 @@ namespace tepp
         }
 
 
-        void on_time_to_send_exec(const & market_data md, callback_t & next)
+        void on_time_to_send_exec(const & market_data_t md, callback_t & next)
         {
             m_order.on_execution(*m_current_exec_index);
             ++m_current_exec_index;
@@ -110,14 +149,14 @@ namespace tepp
             }
 
             /* market */
-            void working_market_order(const & market_data md, callback_t & next)
+            void working_market_order(const & market_data_t md, callback_t & next)
             {
                 // time for answer to reach destination
                 m_trigger += global_market_round_trip_time();
                 next = on_time_to_new_market;
             }
 
-            void on_time_to_full_exec(const & market_data md, callback_t & next)
+            void on_time_to_full_exec(const & market_data_t md, callback_t & next)
             {
                 if ()
             }
@@ -125,7 +164,7 @@ namespace tepp
 
 
 
-            void working_stop_order(const & market_data md, callback_t & next)
+            void working_stop_order(const & market_data_t md, callback_t & next)
             {
                 // time for answer to reach destination
                 m_trigger += global_market_round_trip_time();
@@ -138,17 +177,17 @@ namespace tepp
             }
 
 
-            void on_time_to_reject(const & market_data md, callback_t & next)
+            void on_time_to_reject(const & market_data_t md, callback_t & next)
             {
                 m_order.notify_status_changed(order_t::status::rejected);
                 next = nullptr;
             }
-            void on_time_to_working(const & market_data md, callback_t & next)
+            void on_time_to_working(const & market_data_t md, callback_t & next)
             {
                 m_order.notify_status_changed(order_t::status::working);
                 next = on_working_waiting_event;
             }
-            void on_working_waiting_event(const & market_data md, callback_t & next)
+            void on_working_waiting_event(const & market_data_t md, callback_t & next)
             {
                 if (order.get_kind() == order_t::kind::market)
                 {
@@ -157,7 +196,7 @@ namespace tepp
 
             }
 
-            callback closed(const & market_data md, bool & need_redo)
+            callback closed(const & market_data_t md, bool & need_redo)
             {
                 m_callback = nullptr;
             }
@@ -168,7 +207,7 @@ namespace tepp
         };
 
 
-        template < class market_data, class instrument_t, class order_owner_t  > class virtual_market
+        template < class market_data_t, class instrument_t, class order_owner_t  > class virtual_market
         {
             typedef order<instrument_t, order_owner_t> this_order;
             typedef std::list< this_order > container;
@@ -181,7 +220,7 @@ namespace tepp
 
         public:
 
-            void on_new_market_data(const market_data & md)
+            void on_new_market_data(const market_data_t & md)
             {
                 for (container::iterator it = m_orders.begin(); it != m_orders.end();)
                 {

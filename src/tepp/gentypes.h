@@ -36,9 +36,6 @@ namespace tepp
     typedef uint32_t qty;
     const qty infinite_qty = std::numeric_limits<uint32_t>::infinity();
     
-    typedef std::chrono::duration<int64_t, std::milli> milliseconds_t;
-    typedef std::chrono::duration<int64_t, std::micro> microsecondes_t;
-
 }
 
 #endif // TEPP_GENTYPES_H_

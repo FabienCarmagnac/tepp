@@ -9,7 +9,8 @@
 namespace tepp
 {
 
-    template < class object_t, class event_args_t > class event_timed_queue
+    template < class object_t, class event_args_t > 
+    class event_timed_queue
     {
         typedef void (object_t::*on_event_t)(const event_args_t &);
 
@@ -31,7 +32,7 @@ namespace tepp
         typedef std::forward_list<local_event> container;
         container m_seq;
         std::size_t m_size = 0;
-        tp m_current_time = milliseconds_t(0);
+        tp m_current_time = std::chrono::milliseconds(0);
     public:
 
         void on_event(const event_args_t & data)
@@ -49,6 +50,26 @@ namespace tepp
                 //if (m_size>0) std::cout << m_size << "," << m_seq.begin()->rendezvous << ", stop=" << stop_time << std::endl;
             }
             m_current_time = stop_time;
+        }
+        tp increment(const event_args_t & data)
+        {
+            bool has_more=false;
+            if(m_size > 0 && m_seq.begin()->rendezvous <= data.get_time())
+            {
+                //std::cout << m_size << "," << m_seq.begin()->rendezvous << ", stop=" << stop_time << std::endl;
+                local_event lc = *m_seq.begin();
+                m_current_time = lc.rendezvous;
+                m_seq.pop_front();
+                --m_size;
+                lc.exec(data);
+                has_more = m_size > 0 && m_seq.begin()->rendezvous <= data.get_time();
+                //if (m_size>0) std::cout << m_size << "," << m_seq.begin()->rendezvous << ", stop=" << stop_time << std::endl;
+            }
+
+            if (has_more)
+                return (m_current_time = m_seq.begin()->rendezvous);
+            else 
+                return (m_current_time = data.get_time());
         }
         size_t size()const
         {

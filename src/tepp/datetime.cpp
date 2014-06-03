@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <time.h>
 
+#pragma warning( disable : 4996 ) 
+
 namespace tepp
 {
     /*
@@ -42,36 +44,16 @@ namespace tepp
         if (size < TimeFormat_YYYYMMDD_HHMiSS_size)
             return clock_t::from_time_t(mktime(&tm1));
 
-        std::sscanf(c += (TimeFormat_YYYYMMDD_size+1), "%2d%2d%2d", &tm1.tm_hour, &tm1.tm_min, &tm1.tm_sec);
-        
+        float secs = 0;
+        std::sscanf(c += (TimeFormat_YYYYMMDD_size+1), "%2d%2d%fl", &tm1.tm_hour, &tm1.tm_min, &secs);
+        tm1.tm_sec = (int)secs;
         tp ret = clock_t::from_time_t(mktime(&tm1));
+
         if (size == TimeFormat_YYYYMMDD_HHMiSS_size)
             return ret;
 
-        c = str.c_str() + TimeFormat_YYYYMMDD_HHMiSS_size;
-
-        if (size >= (TimeFormat_YYYYMMDD_HHMiSS_size+2) && *c == '.')
-        {
-            c++;
-            int millisecs(0);
-            std::sscanf(c, "%d", &millisecs);
-            if (millisecs == 0) 
-                return ret;
-
-            const char * cc = c;
-            int leading_zeros = 0;
-            while (cc < end && *cc == '0')
-            {
-                cc++;
-                leading_zeros++;
-            }
-            int k = (TimeFormat_YYYYMMDD_HHMiSS_FFF_size - size - leading_zeros);
-            if (k>0)
-                millisecs *= std::pow(10, k);
-
-            return ret + milliseconds_t(millisecs);
-
-        }
+        if (secs - tm1.tm_sec > 0.0005)// has milli
+            ret += std::chrono::milliseconds( ((int)(secs*1000)) % 1000 );
 
         return ret;
     }
@@ -90,22 +72,15 @@ namespace tepp
         std::time_t t = clock_t::to_time_t(ddate);
 		std::tm tm1 = { 0 };
 		te_gmtime(&t, & tm1);
-        std::string buf;
-        buf.reserve(TimeFormat_YYYYMMDD_HHMiSS_FFF_size+1);
-        buf.resize(TimeFormat_YYYYMMDD_HHMiSS_FFF_size, '0');
-        char * c = &buf[0];
-        std::strftime(c, TimeFormat_YYYYMMDD_HHMiSS_FFF_size, "%Y%m%d_%H%M%S", &tm1);
-        auto m = std::chrono::duration_cast<milliseconds_t>(ddate.time_since_epoch()).count();
+        std::string buf("00000000_000000.000");
+        std::strftime(&buf[0], TimeFormat_YYYYMMDD_HHMiSS_FFF_size, "%Y%m%d_%H%M%S", &tm1);
+        buf[TimeFormat_YYYYMMDD_HHMiSS_size] = '.';
+        auto m = std::chrono::duration_cast<std::chrono::milliseconds>(ddate.time_since_epoch()).count();
         int millis = m % 1000;
         if (millis == 0)
-        {
-            buf.resize(TimeFormat_YYYYMMDD_HHMiSS_size);
             return buf;
-        }
 
-        c += TimeFormat_YYYYMMDD_HHMiSS_size;
-        *c = '.';
-        c++;
+        char * c = &buf[TimeFormat_YYYYMMDD_HHMiSS_size+1];
         if (millis < 100) c++; // leading zero
         if (millis < 10) c++;
         sprintf(c, "%d", millis);

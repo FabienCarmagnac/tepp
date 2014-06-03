@@ -10,27 +10,14 @@ namespace tepp
 
     class exchange
     {
-        std::string m_description;
-        milliseconds_t m_transport_time;
     public:
-        exchange(const std::string & p_description = "default_standard", milliseconds_t p_transport_time = milliseconds_t(250));
-        const std::string & description()const;
-        milliseconds_t transport_time()const;
+         std::string description = "default";
+         static const std::chrono::milliseconds & transport_time(){ static auto c = std::chrono::milliseconds(250); return c; }
+         static const std::chrono::milliseconds & transport_time_on_exec(){ static auto c = std::chrono::milliseconds(201); return c; }
+         static const std::chrono::milliseconds & processing_time_creation_request(){ static auto c = std::chrono::milliseconds(30); return c; }
+         static const std::chrono::milliseconds & processing_time_cancel_request(){ static auto c = std::chrono::milliseconds(40); return c; }
     };
-
-    class fast_exchange : public exchange
-    {
-    public:
-        fast_exchange();
-    };
-
-    class slow_exchange : public exchange
-    {
-    public:
-        slow_exchange();
-    };
-
-    
+  
 
 }
 

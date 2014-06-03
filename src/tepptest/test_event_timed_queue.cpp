@@ -3,7 +3,6 @@
 
 using namespace tepp;
 
-
 class base_arg
 {
     tp m_tp = std::chrono::system_clock::now();
@@ -11,7 +10,7 @@ public:
     tp get_time()const{ return m_tp; }
     void inc(int millis)
     {
-        m_tp += milliseconds_t(millis);
+        m_tp += std::chrono::milliseconds(millis);
     }
 };
 
@@ -28,7 +27,7 @@ public:
         if (int_value >= 3)
         {
             i++;
-            queue.emplace(&base_test::t_x<4>, queue.get_time() + milliseconds_t(100), this);
+            queue.emplace(&base_test::t_x<4>, queue.get_time() + std::chrono::milliseconds(100), this);
         }
         else
         {
@@ -45,9 +44,9 @@ void test_event_timed_queue()
     base_test bt(queue);
 
     queue.on_event(ba);
-    queue.emplace(&base_test::t_x<1>, ba.get_time() + milliseconds_t(1000), &bt);
-    queue.emplace(&base_test::t_x<2>, ba.get_time() + milliseconds_t(2000), &bt);
-    queue.emplace(&base_test::t_x<3>, ba.get_time() + milliseconds_t(3000), &bt);
+    queue.emplace(&base_test::t_x<1>, ba.get_time() + std::chrono::milliseconds(1000), &bt);
+    queue.emplace(&base_test::t_x<2>, ba.get_time() + std::chrono::milliseconds(2000), &bt);
+    queue.emplace(&base_test::t_x<3>, ba.get_time() + std::chrono::milliseconds(3000), &bt);
     
     CHECK_EQUAL(bt.i, 0);
     queue.on_event(ba);
@@ -94,5 +93,6 @@ void test_event_timed_queue()
 
 
 }
+
 
 

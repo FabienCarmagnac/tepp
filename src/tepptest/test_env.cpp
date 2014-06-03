@@ -1,6 +1,8 @@
 #include "tepptest/helpers.h"
 #include "tepp/env.h"
 
+#pragma warning( disable : 4996 ) 
+
 void test_env()
 {
     CHECK_TRUE(tepp::root().size());
